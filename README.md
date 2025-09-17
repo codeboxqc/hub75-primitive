@@ -23,20 +23,26 @@ A comprehensive graphics library for controlling HUB75 LED matrix panels using E
 ## Pin Configuration
 
 ```cpp
-#define R1_PIN 25
-#define G1_PIN 26
-#define B1_PIN 27
-#define R2_PIN 14
-#define G2_PIN 12
-#define B2_PIN 13
-#define A_PIN 23
-#define B_PIN 19
-#define C_PIN 5
-#define D_PIN 17
-#define E_PIN 18  // Required for 64x64 panels
-#define LAT_PIN 4
-#define OE_PIN 15
-#define CLK_PIN 16
+ // Pin configuration - adjust these for your ESP32 setup
+#define R1_PIN 17 //25/ok
+#define B1_PIN 8  //27 /ok
+#define R2_PIN  3 //14/ok  ------
+#define B2_PIN 10  //13/ok
+#define A_PIN  15  //23 ok ?
+#define C_PIN 7  //5/ok
+#define CLK_PIN 5 //rx2 ok
+#define OE_PIN 12 //15/ ok
+
+ #define G1_PIN 18  //26 ok ?
+ //#define ground
+ #define G2_PIN   2//46 //12 ok
+ #define E_PIN  13   //18/ ok // Required for 1/32 scan panels (64x64)
+
+ #define B_PIN  11 //19/  ok
+ #define D_PIN   4 //tx2 /ok
+ #define LAT_PIN 6 //4/
+//#define grnd
+  
 ```
 
 ## Installation
