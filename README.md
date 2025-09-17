@@ -1,4 +1,4 @@
-# ESP32 HUB75 LED Matrix Graphics Library
+# ESP32 S3 HUB75 LED Matrix Graphics Library
 
 A comprehensive graphics library for controlling HUB75 LED matrix panels using ESP32 without WiFi. Built on top of the ESP32-HUB75-MatrixPanel-I2S-DMA library for high-performance, flicker-free display.
 
