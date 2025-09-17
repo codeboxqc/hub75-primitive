@@ -1,273 +1,97 @@
-# ESP32 S3 HUB75 LED Matrix Graphics Library
+# ESP32 HUB75 Matrix Panel DMA Graphics Demo
 
-A comprehensive graphics library for controlling HUB75 LED matrix panels using ESP32 without WiFi. Built on top of the ESP32-HUB75-MatrixPanel-I2S-DMA library for high-performance, flicker-free display.
+A comprehensive graphics demo for **ESP32** driving **HUB75 RGB LED panels** using the [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA) library. Demonstrates basic shapes, text rendering, animations, gradients, and custom patterns on a 64x64 RGB LED matrix.
+
+---
 
 ## Features
 
-- ✅ **High Performance**: DMA-based rendering for smooth animations
-- ✅ **Complete Graphics API**: setPixel, lines, rectangles, circles, triangles
-- ✅ **Text Rendering**: Multiple font sizes and positioning
-- ✅ **Advanced Graphics**: Gradients, patterns, animations, stars
-- ✅ **No WiFi Required**: Standalone operation
-- ✅ **Low CPU Overhead**: Hardware-accelerated display refresh
-- ✅ **Color Support**: Full RGB565 color space
-- ✅ **Brightness Control**: 0-255 brightness levels
+- Draw pixels, lines, rectangles, circles, triangles, and rounded rectangles
+- Render text with adjustable size and centered alignment
+- Draw custom shapes like stars
+- Create horizontal gradients
+- Animations: rotating lines with orbiting dots
+- Patterns: checkerboard and gradient fills
+- Adjustable brightness
 
-## Hardware Requirements
+---
 
-- ESP32 (original), ESP32-S2, or ESP32-S3
-- HUB75 LED Matrix Panel (64x64 recommended)
-- Proper power supply (5V, adequate amperage)
-- Jumper wires for connections
+## Hardware
 
-## Pin Configuration
+- ESP32 board (tested with ESP32 DevKit)
+- HUB75 64x64 RGB LED panel (1 panel chain)
 
-```cpp
- // Pin configuration - adjust these for your ESP32 setup
-#define R1_PIN 17 //25/ok
-#define B1_PIN 8  //27 /ok
-#define R2_PIN  3 //14/ok  ------
-#define B2_PIN 10  //13/ok
-#define A_PIN  15  //23 ok ?
-#define C_PIN 7  //5/ok
-#define CLK_PIN 5 //rx2 ok
-#define OE_PIN 12 //15/ ok
+**Connections:**
 
- #define G1_PIN 18  //26 ok ?
- //#define ground
- #define G2_PIN   2//46 //12 ok
- #define E_PIN  13   //18/ ok // Required for 1/32 scan panels (64x64)
+| Panel Pin | ESP32 Pin |
+|-----------|-----------|
+| R1        | 17        |
+| G1        | 18        |
+| B1        | 8         |
+| R2        | 3         |
+| G2        | 2         |
+| B2        | 10        |
+| A         | 15        |
+| B         | 7         |
+| C         | 5         |
+| D         | 4         |
+| E         | 13        |
+| LAT       | 6         |
+| OE        | 12        |
+| CLK       | 5         |
+![Untitled](https://github.com/user-attachments/assets/30fe7a4b-251d-4e1b-9f9d-e0778922268e)
 
- #define B_PIN  11 //19/  ok
- #define D_PIN   4 //tx2 /ok
- #define LAT_PIN 6 //4/
-//#define grnd
-  
-```
+> Adjust pins according to your ESP32 board layout.
+
+---
+
+## Software Requirements
+
+- [Arduino IDE](https://www.arduino.cc/en/software) or PlatformIO
+- ESP32 board package installed in Arduino IDE
+- Libraries:
+  - [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA)
+
+---
 
 ## Installation
 
-### Arduino IDE
-1. Install **ESP32-HUB75-MatrixPanel-DMA** from Library Manager
-2. Install **Adafruit GFX Library** dependency
-3. Copy the code below to your sketch
+1. Clone the repository:
 
-### PlatformIO
-Add to your `platformio.ini`:
-```ini
-lib_deps = 
-    https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
-    adafruit/Adafruit GFX Library
-```
+```bash
+git clone https://github.com/yourusername/ESP32-HUB75-DMA-Graphics.git
+cd ESP32-HUB75-DMA-Graphics
 
-## Memory Requirements
+Open the project in Arduino IDE or PlatformIO
 
-- **64x32 panel**: ~25KB RAM
-- **64x64 panel**: ~49KB RAM  
-- **128x64 panel**: ~98KB RAM
+Install required libraries if missing
 
-Check the [memory calculator](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/blob/master/doc/memcalc.md) for larger configurations.
+Adjust pin configuration in main.cpp for your hardware setup
 
-## Quick Start
+Compile and upload to your ESP32
 
-```cpp
-#include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
+Usage
 
-#define PANEL_RES_X 64
-#define PANEL_RES_Y 64
-#define PANEL_CHAIN 1
+The demo cycles through multiple graphics routines:
 
-MatrixPanel_I2S_DMA *dma_display = nullptr;
+Basic shapes: pixels, lines, rectangles, circles, triangles
 
-void setup() {
-    // Configure pins and create display
-    HUB75_I2S_CFG::i2s_pins _pins = {R1_PIN, G1_PIN, B1_PIN, R2_PIN, G2_PIN, B2_PIN, A_PIN, B_PIN, C_PIN, D_PIN, E_PIN, LAT_PIN, OE_PIN, CLK_PIN};
-    HUB75_I2S_CFG mxconfig(PANEL_RES_X, PANEL_RES_Y, PANEL_CHAIN, _pins);
-    
-    dma_display = new MatrixPanel_I2S_DMA(mxconfig);
-    dma_display->begin();
-    dma_display->setBrightness8(90);
-}
+Text rendering: standard and centered text
 
-void loop() {
-    // Your graphics code here
-    dma_display->drawPixel(10, 10, dma_display->color565(255, 0, 0));
-    delay(100);
-}
-```
+Animations: rotating line with orbiting dots
 
-## Graphics API Reference
+Patterns: checkerboard, gradient, and stars
 
-### Basic Drawing
-```cpp
-// Set individual pixels
-graphics->setPixel(x, y, color);
+Each demo runs for a few seconds before moving to the next.
 
-// Clear screen
-graphics->clearScreen(color);
+Customization
 
-// Draw lines
-graphics->drawLine(x0, y0, x1, y1, color);
-```
+Brightness: graphics->setBrightness(brightness) (0-255)
 
-### Shapes
-```cpp
-// Rectangles
-graphics->drawRectangle(x, y, width, height, color, filled);
+Colors: Modify myRED, myGREEN, myBLUE, etc., in setup()
 
-// Circles  
-graphics->drawCircle(centerX, centerY, radius, color, filled);
+Text size: Adjust textSize in drawText() or drawCenteredText()
 
-// Triangles
-graphics->drawTriangle(x0, y0, x1, y1, x2, y2, color, filled);
+License
 
-// Stars
-graphics->drawStar(centerX, centerY, outerRadius, innerRadius, color, filled);
-```
-
-### Text
-```cpp
-// Basic text
-graphics->drawText(x, y, "Hello", color, textSize);
-
-// Centered text
-graphics->drawCenteredText("ESP32", color, textSize);
-```
-
-### Advanced Graphics
-```cpp
-// Gradients
-graphics->drawHorizontalGradient(x, y, width, height, color1, color2);
-
-// Patterns
-graphics->drawCheckerboard(squareSize, color1, color2);
-
-// Animations
-graphics->animateRotatingLine(centerX, centerY, length, color, angle);
-```
-
-### Color Management
-```cpp
-// Create colors
-uint16_t red = dma_display->color565(255, 0, 0);
-uint16_t green = dma_display->color565(0, 255, 0);
-uint16_t blue = dma_display->color565(0, 0, 255);
-
-// Set brightness
-graphics->setBrightness(128); // 0-255
-```
-
-## Example Projects
-
-### Simple Pixel Drawing
-```cpp
-void drawPattern() {
-    graphics->clearScreen();
-    
-    // Draw a cross pattern
-    for(int i = 0; i < 64; i++) {
-        graphics->setPixel(i, 32, myRED);
-        graphics->setPixel(32, i, myGREEN);
-    }
-}
-```
-
-### Animation Example
-```cpp
-void rotatingSquare() {
-    for(int angle = 0; angle < 360; angle += 5) {
-        graphics->clearScreen();
-        
-        // Calculate rotated square corners
-        int centerX = 32, centerY = 32, size = 15;
-        // ... rotation math ...
-        
-        graphics->drawRectangle(x, y, size, size, myBLUE, true);
-        delay(50);
-    }
-} 
-
-```
-
-### Text Display
-```cpp
-void displayInfo() {
-    graphics->clearScreen();
-    graphics->drawText(2, 5, "ESP32", myRED, 1);
-    graphics->drawText(2, 15, "HUB75", myGREEN, 1);
-    graphics->drawCenteredText("LED", myWHITE, 2);
-}
-```
-
-## Troubleshooting
-
-### Display Issues
-- **Ghosting**: Try `dma_display->setLatBlanking(2)`
-- **Color offset**: Set `mxconfig.clkphase = false`
-- **Flickering**: Check power supply and connections
-- **Dim display**: Increase brightness with `setBrightness8(255)`
-
-### Power Requirements
-- Use adequate 5V power supply
-- Add 1000-2000µF capacitors across VCC/GND on each panel
-- Keep power cables short and thick
-
-### Memory Issues
-- Monitor free heap: `Serial.println(ESP.getFreeHeap())`
-- Use smaller panels or reduce color depth for large displays
-- Consider ESP32-S3 with PSRAM for bigger setups
-
-## Wiring Diagram
-
-```
-ESP32 Pin  ->  HUB75 Pin
-R1 (25)    ->  R1
-G1 (26)    ->  G1  
-B1 (27)    ->  B1
-R2 (14)    ->  R2
-G2 (12)    ->  G2
-B2 (13)    ->  B2
-A (23)     ->  A
-B (19)     ->  B  
-C (5)      ->  C
-D (17)     ->  D
-E (18)     ->  E (64x64 panels only)
-LAT (4)    ->  LAT
-OE (15)    ->  OE
-CLK (16)   ->  CLK
-GND        ->  GND
-5V         ->  VCC (External PSU)
-```
-
-![Untitled](https://github.com/user-attachments/assets/84edbf2a-8e12-424d-b3a0-1b758331da51)
-
-
-
-## Performance Tips
-
-1. **Use DMA efficiently**: Minimize `clearScreen()` calls
-2. **Batch operations**: Group drawing commands together  
-3. **Optimize colors**: Pre-calculate color565 values
-4. **Memory management**: Monitor heap usage
-5. **Frame timing**: Use consistent delay intervals
-
-## License
-
-This project builds upon the excellent ESP32-HUB75-MatrixPanel-I2S-DMA library. Please check the original library's license terms.
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## Acknowledgments
-
-- [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA) - Base library
-- [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library) - Graphics primitives
-- ESP32 community for hardware support
-
-## Support
-
-For hardware-specific issues, refer to the [original library documentation](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA).
-
----
-**Ready to create amazing LED matrix displays with your ESP32!** 🚀
+MIT License – free to use, modify, and share.
