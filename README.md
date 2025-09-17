@@ -179,7 +179,8 @@ void rotatingSquare() {
         graphics->drawRectangle(x, y, size, size, myBLUE, true);
         delay(50);
     }
-}
+} 
+
 ```
 
 ### Text Display
@@ -231,6 +232,10 @@ CLK (16)   ->  CLK
 GND        ->  GND
 5V         ->  VCC (External PSU)
 ```
+
+![Untitled](https://github.com/user-attachments/assets/84edbf2a-8e12-424d-b3a0-1b758331da51)
+
+
 
 ## Performance Tips
 
